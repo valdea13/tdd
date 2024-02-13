@@ -75,6 +75,6 @@ class CounterTest(TestCase):
 
         delete_result = self.client.delete('/counters/tar')
         self.assertEqual(delete_result.status_code, status.HTTP_204_NO_CONTENT)
-        
-        get_result = self.client.put('/counters/tar')
+
+        get_result = self.client.get('/counters/tar')
         self.assertEqual(get_result.status_code, status.HTTP_404_NOT_FOUND)
