@@ -50,7 +50,7 @@ class CounterTest(TestCase):
         self.assertNotEqual(updated_result.json['car'], post_result.json['car'])
 
     def test_read_a_counter(self):
-        """It should update a counter and increment the value"""
+        """It read a counter"""
         post_result = self.client.post('/counters/far')
         self.assertEqual(post_result.status_code, status.HTTP_201_CREATED)
 
