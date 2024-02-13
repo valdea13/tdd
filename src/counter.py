@@ -48,7 +48,7 @@ def get_counter(name):
 def delete_counter(name):
     """Create a counter"""
     app.logger.info(f"Request to update counter: {name}")
-  
+
     if name not in COUNTERS:
         return {"Message": f"Counter {name} doesn't exist"}, status.HTTP_404_NOT_FOUND
     del COUNTERS[name]
