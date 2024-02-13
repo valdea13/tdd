@@ -50,7 +50,7 @@ class CounterTest(TestCase):
         self.assertNotEqual(updated_result.json['car'], post_result.json['car'])
 
     def test_read_a_counter(self):
-        """It read a counter"""
+        """It reads a counter"""
         post_result = self.client.post('/counters/far')
         self.assertEqual(post_result.status_code, status.HTTP_201_CREATED)
 
@@ -67,3 +67,14 @@ class CounterTest(TestCase):
 
         self.assertEqual(get_result.json['far'], updated_result.json['far'])
 
+
+    def test_read_a_counter(self):
+        """It deletes a counter"""
+        post_result = self.client.post('/counters/tar')
+        self.assertEqual(post_result.status_code, status.HTTP_201_CREATED)
+
+        delete_result = self.client.delete('/counters/tar')
+        self.assertEqual(delete_result.status_code, status.HTTP_204_NO_CONTENT)
+        
+        get_result = self.client.put('/counters/tar')
+        self.assertEqual(get_result.status_code, status.HTTP_404_NOT_FOUND)
