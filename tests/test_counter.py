@@ -57,7 +57,7 @@ class CounterTest(TestCase):
         get_result = self.client.get('/counters/far')
         self.assertEqual(get_result.status_code, status.HTTP_200_OK)
 
-        self.assertEqual(get_result.json['car'], post_result.json['car'])
+        self.assertEqual(get_result.json['far'], post_result.json['far'])
 
         updated_result = self.client.put('/counters/far')
         self.assertEqual(updated_result.status_code, status.HTTP_200_OK)
@@ -65,5 +65,5 @@ class CounterTest(TestCase):
         get_result = self.client.get('/counters/far')
         self.assertEqual(get_result.status_code, status.HTTP_200_OK)
 
-        self.assertEqual(get_result.json['car'], updated_result.json['car'])
+        self.assertEqual(get_result.json['far'], updated_result.json['far'])
 
