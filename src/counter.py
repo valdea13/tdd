@@ -14,7 +14,7 @@ COUNTERS = {}
 # on this function is "POST".
 @app.route('/counters/<name>', methods=['POST'])
 def create_counter(name):
-    """Create a counter"""
+    """Creates a counter"""
     app.logger.info(f"Request to create counter: {name}")
     global COUNTERS
     if name in COUNTERS:
@@ -25,7 +25,7 @@ def create_counter(name):
 
 @app.route('/counters/<name>', methods=['PUT'])
 def update_counter(name):
-    """Update a counter"""
+    """Updates a counter"""
     app.logger.info(f"Request to update counter: {name}")
 
     if name not in COUNTERS:
@@ -36,7 +36,7 @@ def update_counter(name):
 
 @app.route('/counters/<name>', methods=['GET'])
 def get_counter(name):
-    """Read a counter"""
+    """Reads a counter"""
     app.logger.info(f"Request to get counter: {name}")
 
     if name not in COUNTERS:
@@ -44,9 +44,9 @@ def get_counter(name):
     return {name: COUNTERS[name]}, status.HTTP_200_OK
 
 
-@app.route('/counters/<name>', methods=['PUT'])
+@app.route('/counters/<name>', methods=['DELETE'])
 def delete_counter(name):
-    """Create a counter"""
+    """Deletes a counter"""
     app.logger.info(f"Request to update counter: {name}")
 
     if name not in COUNTERS:
