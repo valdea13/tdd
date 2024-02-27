@@ -1,12 +1,12 @@
 name: CI workflow
 
 on:
-    push: 
-        branches:
-            - "main"
-    pull_request:
-        branches:
-            - "main"
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
 
 jobs:
   build:
@@ -15,16 +15,69 @@ jobs:
     container: python:3.9-slim
       
     steps:
-        - name: Checkout
-          uses: actions/checkout@v3
-        - name: Install dependencies
-          run: |
-            python -m pip install --upgrade pip
-            pip install -r requirements.txt
-        - name: Lint with flake8
-          run: |
-            flake8 src --count --select=E9,F63,F7,F82 --show-source --statistics
-            flake8 src --count --max-complexity=10 --max-line-length=127 --statistics
-        - name: Run unit tests with nose
-          run: |
-            nosetests -v --with-spec --spec-color --with-coverage --cover-package=app
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lint with flake8
+        run: |
+          flake8 src --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 src --count --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Run unit tests with nose
+        run: |
+          nosetests -v --with-spec --spec-color --with-coverage --cover-package=app
+
+      - name: Format code with autopep8
+        run: |
+          autopep8 --in-place --recursive src
+
+      - name: Code Complexity Analysis
+        run: |
+          radon cc src
+
+      - name: Generate Documentation with Sphinx
+        run: |
+          # Assuming you have a Sphinx configuration
+          sphinx-build -b html docs/source docs/build
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v2
+
+      - name: Dependency Scanning
+        run: |
+          pip install safety
+          safety check --full-report
+
+      - name: Static Code Analysis with SonarQube
+        uses: sonarsource/sonarcloud-github-action@v1
+        with:
+          organization: "<your-organization>"
+          token: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Dependency Check with Snyk
+        run: |
+          npx snyk test
+
+      - name: Build and Push Docker Image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          docker build -t myapp:latest .
+          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+          docker push myapp:latest
+
+      - name: Notify on Slack (On Success)
+        if: success()
+        run: |
+          # Your Slack notification script or command here
+
+      - name: Notify on Slack (On Failure)
+        if: failure()
+        run: |
+          # Your Slack notification script or command here
